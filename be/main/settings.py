@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     # apps
     'sepay',
+    'swap',
 ]
 
 MIDDLEWARE = [
