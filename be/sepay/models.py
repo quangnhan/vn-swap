@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class SePayTransaction(models.Model):
-    transaction_id = models.CharField(max_length=20)
+    transaction_id = models.CharField(max_length=20, unique=True)
     transaction_date = models.DateTimeField()
     account_number = models.CharField(max_length=20)
     sub_account = models.CharField(max_length=20, null=True, blank=True)
