@@ -1,9 +1,9 @@
 from django.apps import AppConfig
 
 
-class SepayConfig(AppConfig):
+class TransactionConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'sepay'
+    name = 'transaction'
 
     def ready(self) -> None:
-        import sepay.signals
+        import transaction.signals

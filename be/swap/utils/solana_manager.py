@@ -8,20 +8,28 @@ load_dotenv()
 
 class SolanaManager:
     def __init__(self):
-        url = os.getenv('SOLANA_URL')
-        self.client = Client(url)
-        self.__sender_scecret_key = os.getenv('SOLANA_SENDER_SECRET_KEY')
+        self.__url = os.getenv('SOLANA_URL', '')
+        self.__client = Client(self.__url)
+        sender_scecret_key = os.getenv('SOLANA_SENDER_SECRET_KEY', '')
+        self.__sender = Keypair().from_private_key(sender_scecret_key)
 
-    def send_transaction(self, wallet_address: str, amount: int):
-        sender = Keypair().from_private_key(self.__sender_scecret_key)
-        receiver = PublicKey(wallet_address)
+    @property
+    def url(self):
+        return self.__url
+    
+    @property
+    def sender(self):
+        return self.__sender
+    
+    def send_transaction(self, receiver_wallet_address: str, amount: int):
+        receiver = PublicKey(receiver_wallet_address)
 
         instruction = transfer(
-            from_public_key=sender.public_key,
+            from_public_key=self.__sender.public_key,
             to_public_key=receiver, 
             lamports=amount
         )
-        transaction = Transaction(instructions=[instruction], signers=[sender])
+        transaction = Transaction(instructions=[instruction], signers=[self.__sender])
 
-        result = self.client.send_transaction(transaction)
+        result = self.__client.send_transaction(transaction)
         return result
