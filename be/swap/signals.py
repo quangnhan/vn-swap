@@ -27,9 +27,12 @@ def send_crypto_to_receiver(sender, instance, created, **kwargs):
             # Update status of MainTransction to COMPLETE_CRYPTO_TRANSFER
             instance.status = COMPLETE_CRYPTO_TRANSFER
         except Exception as e:
+            error = f"An error occurred while processing MainTransaction object {instance.transaction_id}: {e}"
             instance.status = FAILED
+            instance.log = error
+
             # Log the exception
-            logger.error(f"An error occurred while processing Transaction object {instance.transaction_id}: {e}")
+            logger.error(error)
 
         # Save MainTransaction status
         instance.save()

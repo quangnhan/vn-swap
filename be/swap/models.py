@@ -2,7 +2,7 @@ from django.db import models
 from transaction.models import MainTransaction
 
 class SwapTransaction(models.Model):
-    transaction = models.ForeignKey(MainTransaction, on_delete=models.CASCADE)
+    transaction = models.OneToOneField(MainTransaction, on_delete=models.CASCADE)
     signature = models.CharField(max_length=100, default='')
     destination = models.CharField(max_length=100)
     lamports = models.IntegerField()

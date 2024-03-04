@@ -3,12 +3,15 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from swap.models import SwapTransaction
 from swap.utils.solana_manager import SolanaManager
-from .models import MainTransaction, COMPLETE_BANK_TRANSFER, CREATE_CRYPTO_TRANSER, COMPLETE_CRYPTO_TRANSFER, COMPLETED
+from .models import WAITING_BANK_TRANSFER, MainTransaction, CREATED, COMPLETE_BANK_TRANSFER, CREATE_CRYPTO_TRANSER, COMPLETE_CRYPTO_TRANSFER, COMPLETED
 
 logger = logging.getLogger(__name__)
 
 @receiver(pre_save, sender=MainTransaction)
 def sepay_transaction_created(sender, instance, **kwargs):
+    if instance.status == CREATED:
+        instance.status = WAITING_BANK_TRANSFER
+
     if instance.status == COMPLETE_BANK_TRANSFER:
         solana_manager = SolanaManager()
         try:
